@@ -28,11 +28,11 @@ export async function POST() {
   }
 
   const payload = {
-    productId,
-    successUrl: `${appUrl}/account?checkout=success`,
-    cancelUrl: `${appUrl}/account?checkout=cancel`,
-    referenceId: user.id,
-    metadata: { referenceId: user.id },
+    product_id: productId,
+    success_url: `${appUrl}/account?checkout=success`,
+    cancel_url: `${appUrl}/account?checkout=cancel`,
+    reference_id: user.id,
+    metadata: { reference_id: user.id },
     customer: {
       email: user.email,
       name: user.user_metadata?.full_name || user.user_metadata?.name,

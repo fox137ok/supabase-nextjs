@@ -45,6 +45,10 @@ export async function signup(formData) {
 }
 
 function resolveOrigin(headersList) {
+  // Prefer explicit env to avoid localhost fallbacks on hosted environments
+  if (process.env.APP_URL) return process.env.APP_URL
+  if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL
+
   // Prefer forwarded host in Vercel/Edge, then origin header, finally host.
   const forwarded = headersList.get('x-forwarded-host')
   if (forwarded) return `https://${forwarded}`
