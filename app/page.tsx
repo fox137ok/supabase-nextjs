@@ -1,6 +1,36 @@
 import Link from 'next/link'
 
-export default function Home() {
+import SubscribeButton from '@/components/SubscribeButton'
+import { createClient } from '@/utils/supabase/server'
+
+export default async function Home() {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  let subscriptionStatus: string | null = null
+
+  if (user) {
+    try {
+      const { data, error } = await supabase
+        .from('subscriptions')
+        .select('status')
+        .eq('user_id', user.id)
+        .maybeSingle()
+
+      if (!error && data) {
+        subscriptionStatus = data.status as string | null
+      }
+    } catch (error) {
+      console.warn('Failed to read subscription status', error)
+    }
+  }
+
+  const isSubscribed = ['active', 'trialing', 'paid'].includes(
+    (subscriptionStatus || '').toLowerCase()
+  )
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100">
       {/* 导航栏 */}
@@ -98,6 +128,98 @@ export default function Home() {
               <p className="text-gray-600">
                 完整的用户资料管理,支持头像上传和个人信息自定义
               </p>
+            </div>
+          </div>
+
+          {/* Pricing 表格 */}
+          <div id="pricing" className="mt-24">
+            <div className="text-center mb-10">
+              <p className="text-sm uppercase tracking-[0.3em] text-blue-600 font-semibold mb-3">
+                Pricing
+              </p>
+              <h2 className="text-4xl font-bold text-gray-900 mb-3">升级获取无限对话</h2>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                未登录用户每次最多 3 轮，免费账号 7 轮，订阅后解锁无限提问与优先响应。
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* 免费卡片 */}
+              <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-2xl font-bold text-gray-900">免费体验</h3>
+                  <span className="text-xs px-3 py-1 bg-blue-50 text-blue-700 rounded-full border border-blue-100">
+                    登录即可
+                  </span>
+                </div>
+                <p className="text-gray-600 mb-6">
+                  轻量试用，适合刚开始体验产品的用户。
+                </p>
+                <p className="text-4xl font-bold text-gray-900 mb-6">
+                  $0
+                  <span className="text-base font-medium text-gray-500"> / forever</span>
+                </p>
+                <ul className="space-y-3 mb-8 text-gray-700">
+                  <li className="flex items-start gap-2">
+                    <span className="text-green-500">•</span> 未登录：单次会话 3 轮
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-green-500">•</span> 登录后：单次会话 7 轮
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-green-500">•</span> 基础用户资料管理
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-green-500">•</span> 邮箱/第三方登录
+                  </li>
+                </ul>
+                <Link
+                  href="/login"
+                  className="block text-center w-full px-5 py-3 font-semibold rounded-lg border border-gray-300 hover:bg-gray-50 transition-all"
+                >
+                  登录试用
+                </Link>
+              </div>
+
+              {/* 订阅卡片 */}
+              <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-2xl p-1 shadow-2xl">
+                <div className="bg-white rounded-2xl p-8 h-full">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-2xl font-bold text-gray-900">Pro 订阅</h3>
+                    <span className="text-xs px-3 py-1 bg-purple-100 text-purple-700 rounded-full border border-purple-200">
+                      最佳价值
+                    </span>
+                  </div>
+                  <p className="text-gray-600 mb-6">无限提问，优先响应，适合重度使用者。</p>
+                  <p className="text-4xl font-bold text-gray-900 mb-6">
+                    $7
+                    <span className="text-base font-medium text-gray-500"> / 月</span>
+                  </p>
+                  <ul className="space-y-3 mb-8 text-gray-700">
+                    <li className="flex items-start gap-2">
+                      <span className="text-purple-600">•</span> 无限对话轮次
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-purple-600">•</span> 优先队列 & 更快响应
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-purple-600">•</span> 订阅状态自动同步
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-purple-600">•</span> 随时在账单门户管理/取消
+                    </li>
+                  </ul>
+                  <SubscribeButton
+                    label={isSubscribed ? '已订阅' : '立即订阅'}
+                    disabled={isSubscribed}
+                  />
+                  {isSubscribed && (
+                    <p className="text-xs text-green-600 mt-3">
+                      您的订阅已激活，无限对话权益已开启。
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
 
