@@ -30,7 +30,8 @@ export async function POST() {
   const payload = {
     product_id: productId,
     success_url: `${appUrl}/account?checkout=success`,
-    metadata: { reference_id: user.id },
+    // 带上两种键名，方便 webhook 侧兼容 snake/camel
+    metadata: { reference_id: user.id, referenceId: user.id },
     customer: {
       email: user.email,
       name: user.user_metadata?.full_name || user.user_metadata?.name,

@@ -50,6 +50,7 @@ export const POST = Webhook({
     const { customer, product, metadata, reason, subscription } = context
     const userId =
       (metadata?.referenceId as string | undefined) ||
+      (metadata?.reference_id as string | undefined) ||
       (metadata?.userId as string | undefined)
 
     if (!userId) {
@@ -70,6 +71,7 @@ export const POST = Webhook({
     const { customer, metadata, reason, subscription } = context
     const userId =
       (metadata?.referenceId as string | undefined) ||
+      (metadata?.reference_id as string | undefined) ||
       (metadata?.userId as string | undefined)
 
     if (!userId) {
