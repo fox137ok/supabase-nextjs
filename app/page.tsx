@@ -70,6 +70,36 @@ export default async function Home() {
         </div>
       </nav>
 
+      {/* 账户状态条 */}
+      {user && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+          {isSubscribed ? (
+            <div className="flex items-center gap-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl px-4 py-3 shadow-lg">
+              <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/20">✓</span>
+              <div>
+                <p className="font-semibold">您是 Pro 订阅用户</p>
+                <p className="text-sm text-white/80">无限对话权益已启用，感谢支持！</p>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white rounded-xl border border-amber-200 px-4 py-3 shadow-sm">
+              <div className="flex items-center gap-3">
+                <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-amber-100 text-amber-700">!</span>
+                <div>
+                  <p className="font-semibold text-amber-800">当前为免费用户</p>
+                  <p className="text-sm text-amber-700">
+                    免费额度单次 7 轮，升级 Pro 解锁无限对话和优先响应。
+                  </p>
+                </div>
+              </div>
+              <div className="w-full sm:w-auto">
+                <SubscribeButton label="升级为 Pro" />
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* 主要内容 */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center">
