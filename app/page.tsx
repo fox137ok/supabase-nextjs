@@ -3,6 +3,10 @@ import Link from 'next/link'
 import SubscribeButton from '@/components/SubscribeButton'
 import { createClient } from '@/utils/supabase/server'
 
+// 需要按请求实时获取登录态/订阅信息，避免静态缓存
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function Home() {
   const supabase = await createClient()
   const {
