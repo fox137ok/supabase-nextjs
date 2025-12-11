@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
 import SubscribeButton from '@/components/SubscribeButton'
+import UserMenu from '@/components/UserMenu'
 import { createClient } from '@/utils/supabase/server'
 
 // 需要按请求实时获取登录态/订阅信息，避免静态缓存
@@ -52,12 +53,7 @@ export default async function Home() {
               </span>
             </div>
             {user ? (
-              <Link
-                href="/account"
-                className="px-6 py-2 bg-white text-gray-800 font-semibold rounded-lg border border-gray-300 hover:bg-gray-50 transition-all shadow-sm"
-              >
-                账户
-              </Link>
+              <UserMenu email={user.email} isSubscribed={isSubscribed} />
             ) : (
               <Link
                 href="/login"
