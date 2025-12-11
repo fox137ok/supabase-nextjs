@@ -30,8 +30,6 @@ export async function POST() {
   const payload = {
     product_id: productId,
     success_url: `${appUrl}/account?checkout=success`,
-    cancel_url: `${appUrl}/account?checkout=cancel`,
-    reference_id: user.id,
     metadata: { reference_id: user.id },
     customer: {
       email: user.email,
@@ -51,6 +49,7 @@ export async function POST() {
 
     if (!response.ok) {
       const detail = await response.text()
+      console.error('Creem checkout failed', response.status, response.statusText, detail)
       return NextResponse.json(
         { error: 'Failed to create Creem checkout session', detail },
         { status: 502 }
