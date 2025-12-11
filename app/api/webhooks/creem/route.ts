@@ -46,7 +46,8 @@ async function upsertSubscription({
 
 export const POST = Webhook({
   webhookSecret: process.env.CREEM_WEBHOOK_SECRET!,
-  onGrantAccess: async ({ customer, subscription, product, metadata, reason }) => {
+  onGrantAccess: async (context: any) => {
+    const { customer, product, metadata, reason, subscription } = context
     const userId =
       (metadata?.referenceId as string | undefined) ||
       (metadata?.userId as string | undefined)
@@ -65,7 +66,8 @@ export const POST = Webhook({
       currentPeriodEnd: subscription?.currentPeriodEnd || subscription?.expiresAt || null,
     })
   },
-  onRevokeAccess: async ({ customer, subscription, metadata, reason }) => {
+  onRevokeAccess: async (context: any) => {
+    const { customer, metadata, reason, subscription } = context
     const userId =
       (metadata?.referenceId as string | undefined) ||
       (metadata?.userId as string | undefined)
