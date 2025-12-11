@@ -44,10 +44,24 @@ export async function signup(formData) {
   redirect('/account')
 }
 
+function resolveOrigin(headersList) {
+  // Prefer forwarded host in Vercel/Edge, then origin header, finally host.
+  const forwarded = headersList.get('x-forwarded-host')
+  if (forwarded) return `https://${forwarded}`
+
+  const origin = headersList.get('origin')
+  if (origin) return origin
+
+  const host = headersList.get('host')
+  if (host) return `https://${host}`
+
+  return 'http://localhost:3000'
+}
+
 export async function signInWithGithub() {
   const supabase = await createClient()
   const headersList = await headers()
-  const origin = headersList.get('origin') || 'http://localhost:3000'
+  const origin = resolveOrigin(headersList)
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'github',
@@ -68,7 +82,7 @@ export async function signInWithGithub() {
 export async function signInWithGoogle() {
   const supabase = await createClient()
   const headersList = await headers()
-  const origin = headersList.get('origin') || 'http://localhost:3000'
+  const origin = resolveOrigin(headersList)
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
