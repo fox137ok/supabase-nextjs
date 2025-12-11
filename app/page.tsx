@@ -15,6 +15,7 @@ export default async function Home() {
   } = await supabase.auth.getUser()
 
   let subscriptionStatus: string | null = null
+  let isSubscribed = false
 
   if (user) {
     try {
@@ -32,9 +33,13 @@ export default async function Home() {
     }
   }
 
-  const isSubscribed = ['active', 'trialing', 'paid'].includes(
-    (subscriptionStatus || '').toLowerCase()
-  )
+  const normalizedStatus = (subscriptionStatus || '').toLowerCase()
+  isSubscribed =
+    normalizedStatus === 'active' ||
+    normalizedStatus === 'trialing' ||
+    normalizedStatus === 'paid' ||
+    normalizedStatus === 'subscription_paid' ||
+    normalizedStatus === 'subscription_active'
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100">
