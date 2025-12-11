@@ -29,9 +29,10 @@ export default function SubscribeButton({
       }
 
       const data = await response.json()
+      const redirectUrl = data?.url || data?.checkout_url
 
-      if (data?.url) {
-        window.location.href = data.url
+      if (redirectUrl) {
+        window.location.href = redirectUrl
         return
       }
 
