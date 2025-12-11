@@ -51,12 +51,21 @@ export default async function Home() {
                 我的应用
               </span>
             </div>
-            <Link
-              href="/login"
-              className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all shadow-md hover:shadow-lg"
-            >
-              登录
-            </Link>
+            {user ? (
+              <Link
+                href="/account"
+                className="px-6 py-2 bg-white text-gray-800 font-semibold rounded-lg border border-gray-300 hover:bg-gray-50 transition-all shadow-sm"
+              >
+                账户
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all shadow-md hover:shadow-lg"
+              >
+                登录
+              </Link>
+            )}
           </div>
         </div>
       </nav>
